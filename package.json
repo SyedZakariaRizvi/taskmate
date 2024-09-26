@@ -1,0 +1,30 @@
+{
+  "name": "taskmate",
+  "version": "1.0.0",
+  "description": "A task management app using Node.js, Express, and MongoDB for creating, updating, completing, and deleting tasks.",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "nodemon app.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/SyedZakariaRizvi/taskmate.git"
+  },
+  "keywords": [
+    "todo",
+    "task",
+    "productivity"
+  ],
+  "author": "Syed Zakaria Rizvi",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/SyedZakariaRizvi/taskmate/issues"
+  },
+  "homepage": "https://github.com/SyedZakariaRizvi/taskmate#readme",
+  "dependencies": {
+    "ejs": "^3.1.10",
+    "express": "^4.21.0",
+    "nodemon": "^3.1.7"
+  }
+}
