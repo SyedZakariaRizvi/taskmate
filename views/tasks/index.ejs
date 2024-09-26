@@ -1,10 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Taskmate</title>
 </head>
+
 <body>
   <div>
     <form action="/tasks" method="POST">
@@ -16,8 +18,26 @@
   </div>
   <% for(const task of tasks) { %>
     <ul>
-      <l1><%= task.todo %> - <%= task.description %></l1>
+      <l1>
+        <input type="checkbox" name="completed" data-task-id="<%= task._id %>" <%=(task.completed) ? "checked" : "" %>>
+        <%= task.todo %> - <%= task.description %>
+      </l1>
     </ul>
-  <% } %>
+    <% } %>
+      <script>
+        document.querySelectorAll("input[type=checkbox]").forEach(checkbox => {
+          checkbox.addEventListener("change", function () {
+            const { taskId } = this.dataset
+            fetch(`/tasks/${taskId}`, {
+              method: "PATCH",
+              headers: {
+                "Content-Type": "application/json"
+              },
+              body: JSON.stringify({ isCompleted: this.checked })
+            })
+          })
+        })
+      </script>
 </body>
+
 </html>

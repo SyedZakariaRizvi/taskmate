@@ -20,6 +20,7 @@ app.set("view engine", "ejs")
 app.set("views", path.join(__dirname, "views"))
 
 app.use(express.urlencoded({ extended: true }))
+app.use(express.json())
 
 app.get("/", (req, res) => {
     res.render("home")
@@ -40,6 +41,21 @@ app.post("/tasks", async (req, res) => {
     })
     task.save()
     res.redirect("/tasks")
+})
+
+app.patch("/tasks/:id", async (req, res) => {
+    const { id } = req.params
+    const { isCompleted } = req.body
+    try {
+        const task = await Task.findByIdAndUpdate(id, { completed: isCompleted })
+        if(!task) {
+            return res.status(404).json({ message: "Task not found" })
+        }
+        res.json(task)
+    } catch (error) {
+        console.error("Error updating task:", error)
+        res.status(500).json({ message: "Error updating task" })
+    }
 })
 
 app.listen(PORT, () => {
