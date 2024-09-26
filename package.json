@@ -23,8 +23,10 @@
   },
   "homepage": "https://github.com/SyedZakariaRizvi/taskmate#readme",
   "dependencies": {
+    "dotenv": "^16.4.5",
     "ejs": "^3.1.10",
     "express": "^4.21.0",
+    "mongoose": "^8.6.3",
     "nodemon": "^3.1.7"
   }
 }
