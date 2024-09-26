@@ -19,6 +19,8 @@ mongoose.connect(process.env.MONGODB_URI)
 app.set("view engine", "ejs")
 app.set("views", path.join(__dirname, "views"))
 
+app.use(express.urlencoded({ extended: true }))
+
 app.get("/", (req, res) => {
     res.render("home")
 })
@@ -26,6 +28,18 @@ app.get("/", (req, res) => {
 app.get("/tasks", async (req, res) => {
     const tasks = await Task.find({})
     res.render("tasks/index", { tasks })
+})
+
+app.post("/tasks", async (req, res) => {
+    const { todo, description, deadline } = req.body
+    const dateDeadline = new Date(deadline)
+    const task = new Task({ 
+        todo, 
+        description,  
+        deadline: dateDeadline
+    })
+    task.save()
+    res.redirect("/tasks")
 })
 
 app.listen(PORT, () => {
