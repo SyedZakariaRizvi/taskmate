@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Taskmate</title>
+</head>
+<body>
+  <div>
+    <form action="/tasks" method="POST">
+      <input name="todo" placeholder="Enter task">
+      <input name="description" placeholder="Description">
+      <input type="date" name="deadline">
+      <button type="submit">Create Task</button>
+    </form>
+  </div>
+  <% for(const task of tasks) { %>
+    <ul>
+      <l1><%= task.todo %> - <%= task.description %></l1>
+    </ul>
+  <% } %>
+</body>
+</html>

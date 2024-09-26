@@ -3,6 +3,8 @@ const path = require("path")
 const mongoose = require("mongoose")
 require("dotenv").config()
 
+const Task = require("./models/task.js")
+
 const app = express()
 const PORT = 3000
 
@@ -19,6 +21,11 @@ app.set("views", path.join(__dirname, "views"))
 
 app.get("/", (req, res) => {
     res.render("home")
+})
+
+app.get("/tasks", async (req, res) => {
+    const tasks = await Task.find({})
+    res.render("tasks/index", { tasks })
 })
 
 app.listen(PORT, () => {
