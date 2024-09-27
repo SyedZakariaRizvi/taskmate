@@ -58,6 +58,20 @@ app.patch("/tasks/:id", async (req, res) => {
     }
 })
 
+app.delete("/tasks/:id", async (req, res) => {
+    const { id } = req.params
+    try {
+        const task = await Task.findByIdAndDelete(id)
+        if(!task) {
+            return res.status(404).json({ message: "Task not found" })
+        }
+        res.json({ message: "Successfully deleted task" })
+    } catch (error) {
+        console.error("Error deleting task:", error)
+        res.status(500).json({ message: "Error deleting task" })
+    }
+})
+
 app.listen(PORT, () => {
     console.log(`Server started at PORT ${PORT}`)
 })

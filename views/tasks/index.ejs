@@ -18,10 +18,11 @@
   </div>
   <% for(const task of tasks) { %>
     <ul>
-      <l1>
+      <li>
         <input type="checkbox" name="completed" data-task-id="<%= task._id %>" <%=(task.completed) ? "checked" : "" %>>
         <%= task.todo %> - <%= task.description %>
-      </l1>
+        <button class="js-delete-task" data-task-id="<%= task._id %>">Delete</button>
+      </li>
     </ul>
     <% } %>
       <script>
@@ -34,6 +35,16 @@
                 "Content-Type": "application/json"
               },
               body: JSON.stringify({ isCompleted: this.checked })
+            })
+          })
+        })
+
+        document.querySelectorAll(".js-delete-task").forEach((button) => {
+          button.addEventListener("click", function() {
+            this.closest("li").remove()
+            const { taskId } = this.dataset
+            fetch(`/tasks/${taskId}`, {
+              method: "DELETE"
             })
           })
         })
