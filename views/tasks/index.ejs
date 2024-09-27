@@ -12,7 +12,7 @@
     <form action="/tasks" method="POST">
       <input name="todo" placeholder="Enter task">
       <input name="description" placeholder="Description">
-      <input type="date" name="deadline">
+      <input type="date" name="deadline" value="<%= new Date().toISOString().split('T')[0] %>">
       <button type="submit">Create Task</button>
     </form>
   </div>
