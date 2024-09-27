@@ -32,15 +32,20 @@ app.get("/tasks", async (req, res) => {
 })
 
 app.post("/tasks", async (req, res) => {
-    const { todo, description, deadline } = req.body
-    const dateDeadline = new Date(deadline)
-    const task = new Task({ 
-        todo, 
-        description,  
-        deadline: dateDeadline
-    })
-    task.save()
-    res.redirect("/tasks")
+    try {
+        const { todo, description, deadline } = req.body
+        const dateDeadline = new Date(deadline)
+        const task = new Task({ 
+            todo, 
+            description,  
+            deadline: dateDeadline
+        })
+        await task.save()
+        res.redirect("/tasks")
+    } catch (error) {
+        console.error("Error creating task:", error);
+        res.status(500).send("Internal Server Error");
+    }
 })
 
 app.patch("/tasks/:id", async (req, res) => {
