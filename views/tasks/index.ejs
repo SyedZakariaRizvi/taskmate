@@ -19,14 +19,14 @@
   <% for(const task of tasks) { %>
     <ul>
       <li>
-        <input type="checkbox" name="completed" data-task-id="<%= task._id %>" <%=(task.completed) ? "checked" : "" %>>
+        <input class="js-task-checkbox" type="checkbox" name="completed" data-task-id="<%= task._id %>" <%=(task.completed) ? "checked" : "" %>>
         <%= task.todo %> - <%= task.description %>
         <button class="js-delete-task" data-task-id="<%= task._id %>">Delete</button>
       </li>
     </ul>
     <% } %>
       <script>
-        document.querySelectorAll("input[type=checkbox]").forEach(checkbox => {
+        document.querySelectorAll(".js-task-checkbox").forEach(checkbox => {
           checkbox.addEventListener("change", function () {
             const { taskId } = this.dataset
             fetch(`/tasks/${taskId}`, {
