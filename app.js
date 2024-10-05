@@ -5,6 +5,9 @@ require("dotenv").config()
 
 const Task = require("./models/task.js")
 
+const ExpressError = require("./utils/ExpressError.js")
+const catchAsync = require("./utils/CatchAsync.js")
+
 const app = express()
 const PORT = 3000
 
@@ -31,50 +34,45 @@ app.get("/tasks", async (req, res) => {
     res.render("tasks/index", { tasks })
 })
 
-app.post("/tasks", async (req, res) => {
-    try {
-        const { todo, description, deadline } = req.body
-        const dateDeadline = new Date(deadline)
-        const task = new Task({ 
-            todo, 
-            description,  
-            deadline: dateDeadline
-        })
-        await task.save()
-        res.redirect("/tasks")
-    } catch (error) {
-        console.error("Error creating task:", error);
-        res.status(500).send("Internal Server Error");
-    }
-})
+app.post("/tasks", catchAsync(async (req, res) => {
+    const { todo, description, deadline } = req.body
+    const dateDeadline = new Date(deadline)
+    const task = new Task({ 
+        todo, 
+        description,  
+        deadline: dateDeadline
+    })
+    await task.save()
+    res.redirect("/tasks")
+}))
 
-app.patch("/tasks/:id", async (req, res) => {
+app.patch("/tasks/:id", catchAsync(async (req, res) => {
     const { id } = req.params
     const { isCompleted } = req.body
-    try {
-        const task = await Task.findByIdAndUpdate(id, { completed: isCompleted })
-        if(!task) {
-            return res.status(404).json({ message: "Task not found" })
-        }
-        res.json(task)
-    } catch (error) {
-        console.error("Error updating task:", error)
-        res.status(500).json({ message: "Error updating task" })
+    const task = await Task.findByIdAndUpdate(id, { completed: isCompleted })
+    if(!task) {
+        return res.status(404).json({ message: "Task not found" })
     }
+    res.json(task)
+}))
+
+app.delete("/tasks/:id", catchAsync(async (req, res) => {
+    const { id } = req.params
+    const task = await Task.findByIdAndDelete(id)
+    if(!task) {
+        return res.status(404).json({ message: "Task not found" })
+    }
+    res.json({ message: "Successfully deleted task" })
+}))
+
+app.all("*", (req, res, next) => {
+    next(new ExpressError("Page not found", 404))
 })
 
-app.delete("/tasks/:id", async (req, res) => {
-    const { id } = req.params
-    try {
-        const task = await Task.findByIdAndDelete(id)
-        if(!task) {
-            return res.status(404).json({ message: "Task not found" })
-        }
-        res.json({ message: "Successfully deleted task" })
-    } catch (error) {
-        console.error("Error deleting task:", error)
-        res.status(500).json({ message: "Error deleting task" })
-    }
+app.use((err, req, res, next) => {
+    const { statusCode = 500 } = err
+    if(!err.message) err.message = "Something went wrong"
+    res.status(statusCode).send(err.message)
 })
 
 app.listen(PORT, () => {
