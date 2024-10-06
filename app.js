@@ -1,6 +1,7 @@
 const express = require("express")
 const path = require("path")
 const mongoose = require("mongoose")
+const session = require("express-session")
 require("dotenv").config()
 
 const Task = require("./models/task.js")
@@ -24,6 +25,18 @@ app.set("views", path.join(__dirname, "views"))
 
 app.use(express.urlencoded({ extended: true }))
 app.use(express.json())
+
+const sessionConfig = {
+    secret: process.env.SESSION_SECRET,
+    resave: false,
+    saveUninitialized: false,
+    cookie: {
+        httpOnly: true,
+        expires: Date.now() + 1000 * 60 * 60 * 24,
+        maxAge: Date.now() + 1000 * 60 * 60 * 24
+    }
+}
+app.use(session(sessionConfig))
 
 app.get("/", (req, res) => {
     res.render("home")
