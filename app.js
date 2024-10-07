@@ -81,7 +81,7 @@ app.patch("/tasks/:id", catchAsync(async (req, res) => {
     const { isCompleted } = req.body
     const task = await Task.findByIdAndUpdate(id, { completed: isCompleted })
     if(!task) {
-        return res.status(404).json({ message: "Task not found" })
+       throw new ExpressError("Task not found", 404)
     }
     res.json(task)
 }))
@@ -90,7 +90,7 @@ app.delete("/tasks/:id", catchAsync(async (req, res) => {
     const { id } = req.params
     const task = await Task.findByIdAndDelete(id)
     if(!task) {
-        return res.status(404).json({ message: "Task not found" })
+        throw new ExpressError("Task not found", 404)
     }
     res.json({ message: "Successfully deleted task" })
 }))
