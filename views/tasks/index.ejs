@@ -10,9 +10,9 @@
 <body>
   <div>
     <form action="/tasks" method="POST">
-      <input name="todo" placeholder="Enter task">
-      <input name="description" placeholder="Description">
-      <input type="date" name="deadline" value="<%= new Date().toISOString().split('T')[0] %>">
+      <input type="text" name="task[todo]" placeholder="Enter task" minlength="5" maxlength="30" required>
+      <input type="text" name="task[description]" placeholder="Description" minlength="10" maxlength="100" required>
+      <input type="date" name="task[deadline]" value="<%= new Date().toISOString().split('T')[0] %>">
       <button type="submit">Create Task</button>
     </form>
   </div>

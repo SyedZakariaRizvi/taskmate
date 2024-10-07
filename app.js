@@ -6,6 +6,8 @@ require("dotenv").config()
 
 const Task = require("./models/task.js")
 
+const Joi = require("joi")
+
 const ExpressError = require("./utils/ExpressError.js")
 const catchAsync = require("./utils/CatchAsync.js")
 
@@ -48,7 +50,22 @@ app.get("/tasks", async (req, res) => {
 })
 
 app.post("/tasks", catchAsync(async (req, res) => {
-    const { todo, description, deadline } = req.body
+    const taskSchema = Joi.object({
+        task: Joi.object({
+            todo: Joi.string().min(5).max(30).required(),
+            description: Joi.string().min(10).max(100).required(),
+            deadline: Joi.date().iso().required()
+        }).required()
+    })
+
+    const { error } = taskSchema.validate(req.body)
+    
+    if(error) {
+        const msg = error.details.map(el => el.message).join(",")
+        throw new ExpressError(msg, 400)
+    }
+
+    const { todo, description, deadline } = req.body.task
     const dateDeadline = new Date(deadline)
     const task = new Task({ 
         todo, 
