@@ -4,6 +4,9 @@ const mongoose = require("mongoose")
 const session = require("express-session")
 require("dotenv").config()
 
+const passport = require("./config/passport.js")
+require("./config/passportLocal.js")
+
 const Task = require("./models/task.js")
 const User = require("./models/user.js")
 
@@ -40,6 +43,9 @@ const sessionConfig = {
     }
 }
 app.use(session(sessionConfig))
+
+app.use(passport.initialize())
+app.use(passport.session())
 
 app.get("/", (req, res) => {
     res.render("home")
