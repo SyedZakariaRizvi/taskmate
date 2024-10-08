@@ -52,11 +52,18 @@ app.get("/", (req, res) => {
 })
 
 app.get("/tasks", async (req, res) => {
-    const tasks = await Task.find({})
+    const { user } = req
+    if(!user) return res.redirect("/users/login")
+
+    await user.populate("tasks")
+    const { tasks } = user
     res.render("tasks/index", { tasks })
 })
 
 app.post("/tasks", catchAsync(async (req, res) => {
+    const { user } = req
+    if(!user) return res.redirect("/users/login")
+
     const taskSchema = Joi.object({
         task: Joi.object({
             todo: Joi.string().min(5).max(30).required(),
@@ -79,7 +86,10 @@ app.post("/tasks", catchAsync(async (req, res) => {
         description,  
         deadline: dateDeadline
     })
+    const findUser = await User.findById(user._id)
+    findUser.tasks.push(task)
     await task.save()
+    await findUser.save()
     res.redirect("/tasks")
 }))
 
@@ -117,6 +127,14 @@ app.post("/users/register", catchAsync(async (req, res) => {
     await user.save()
     res.redirect("/tasks")
 }))
+
+app.get("/users/login", (req, res) => {
+    res.render("auth/login")
+})
+
+app.post("/users/login", passport.authenticate("local"), (req, res) => {
+    res.redirect("/tasks")
+})
 
 app.all("*", (req, res, next) => {
     next(new ExpressError("Page not found", 404))
