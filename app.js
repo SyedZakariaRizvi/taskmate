@@ -7,6 +7,8 @@ require("dotenv").config()
 const passport = require("./config/passport.js")
 require("./config/passportLocal.js")
 
+const { isAuthenticated, isAuthor } = require("./middlewares/auth.js")
+
 const Task = require("./models/task.js")
 const User = require("./models/user.js")
 
@@ -51,18 +53,16 @@ app.get("/", (req, res) => {
     res.render("home")
 })
 
-app.get("/tasks", async (req, res) => {
+app.get("/tasks", isAuthenticated, async (req, res) => {
     const { user } = req
-    if(!user) return res.redirect("/users/login")
 
     await user.populate("tasks")
     const { tasks } = user
     res.render("tasks/index", { tasks })
 })
 
-app.post("/tasks", catchAsync(async (req, res) => {
+app.post("/tasks", isAuthenticated, catchAsync(async (req, res) => {
     const { user } = req
-    if(!user) return res.redirect("/users/login")
 
     const taskSchema = Joi.object({
         task: Joi.object({
@@ -93,7 +93,7 @@ app.post("/tasks", catchAsync(async (req, res) => {
     res.redirect("/tasks")
 }))
 
-app.patch("/tasks/:id", catchAsync(async (req, res) => {
+app.patch("/tasks/:id", isAuthenticated, isAuthor, catchAsync(async (req, res) => {
     const { id } = req.params
     const { isCompleted } = req.body
     const task = await Task.findByIdAndUpdate(id, { completed: isCompleted })
@@ -103,7 +103,7 @@ app.patch("/tasks/:id", catchAsync(async (req, res) => {
     res.json(task)
 }))
 
-app.delete("/tasks/:id", catchAsync(async (req, res) => {
+app.delete("/tasks/:id", isAuthenticated, isAuthor, catchAsync(async (req, res) => {
     const { id } = req.params
     const task = await Task.findByIdAndDelete(id)
     if(!task) {
