@@ -2,6 +2,7 @@ const express = require("express")
 const path = require("path")
 const mongoose = require("mongoose")
 const session = require("express-session")
+const bcrypt = require("bcrypt")
 require("dotenv").config()
 
 const passport = require("./config/passport.js")
@@ -119,10 +120,13 @@ app.get("/users/register", (req, res) => {
 app.post("/users/register", catchAsync(async (req, res) => {
     const { fullname, username, password } = req.body
 
+    let saltRounds = 12
+    const hashedPassword = await bcrypt.hash(password, saltRounds)
+
     const user = new User({ 
         fullname,
         username,
-        password
+        password: hashedPassword
     })  
     await user.save()
     res.redirect("/tasks")
