@@ -5,6 +5,7 @@ const session = require("express-session")
 require("dotenv").config()
 
 const Task = require("./models/task.js")
+const User = require("./models/user.js")
 
 const Joi = require("joi")
 
@@ -93,6 +94,22 @@ app.delete("/tasks/:id", catchAsync(async (req, res) => {
         throw new ExpressError("Task not found", 404)
     }
     res.json({ message: "Successfully deleted task" })
+}))
+
+app.get("/users/register", (req, res) => {
+    res.render("auth/register")
+})
+
+app.post("/users/register", catchAsync(async (req, res) => {
+    const { fullname, username, password } = req.body
+
+    const user = new User({ 
+        fullname,
+        username,
+        password
+    })  
+    await user.save()
+    res.redirect("/tasks")
 }))
 
 app.all("*", (req, res, next) => {
