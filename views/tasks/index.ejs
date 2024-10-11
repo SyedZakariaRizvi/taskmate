@@ -1,54 +1,75 @@
 <!DOCTYPE html>
 <html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="css/tasks.css">
+    <title>Taskmate</title>
+    <link
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+    rel="stylesheet"
+  />
+  </head>
 
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Taskmate</title>
-</head>
+  <body>
+    <div class="container">
+      <form class="todo-form" action="/tasks" method="POST">
+        <div class="todo-list">
+          <h1>ToDo List</h1>
+          <div class="row">
+            <input type="text" id="task-todo" placeholder="Enter task" name="task[todo]" minlength="5" maxlength="30" required>
+            <input type="date" id="task-deadline" value="<%= new Date().toISOString().split('T')[0] %>" name="task[deadline]">
+          </div>
+          <div class="description">
+            <input type="text" id="task-description" placeholder="Description" name="task[description]" minlength="10" maxlength="100" required>
+          </div>
+          <button class="create-task">Create task</button>
+        </div>
+      </form>
+    
+      <% for(const task of tasks) { %>
+        <div class="task-list">
+          <input class="js-task-checkbox task-list-checkbox" type="checkbox" name="completed" data-task-id="<%= task._id %>" <%= (task.completed) ? "checked" : "" %>>
+          <div class="todo-data" style="color: <%= task.completed ? 'rgba(255, 255, 255, 0.4)' : 'rgba(255, 255, 255, 0.8)' %>;">
+            <div class="todo-text"><%= task.todo %></div>
+            <div class="todo-description"><%= task.description %></div>
+          </div>
+          <!-- <button class="js-delete-task" data-task-id="<%= task._id %>">Delete</button> -->
+          <i class="fas fa-trash js-delete-task" data-task-id="<%= task._id %>" style="cursor: pointer;"></i>
+        </div>
+      <% } %>
+    </div>
 
-<body>
-  <div>
-    <form action="/tasks" method="POST">
-      <input type="text" name="task[todo]" placeholder="Enter task" minlength="5" maxlength="30" required>
-      <input type="text" name="task[description]" placeholder="Description" minlength="10" maxlength="100" required>
-      <input type="date" name="task[deadline]" value="<%= new Date().toISOString().split('T')[0] %>">
-      <button type="submit">Create Task</button>
-    </form>
-  </div>
-  <% for(const task of tasks) { %>
-    <ul>
-      <li>
-        <input class="js-task-checkbox" type="checkbox" name="completed" data-task-id="<%= task._id %>" <%=(task.completed) ? "checked" : "" %>>
-        <%= task.todo %> - <%= task.description %>
-        <button class="js-delete-task" data-task-id="<%= task._id %>">Delete</button>
-      </li>
-    </ul>
-    <% } %>
-      <script>
-        document.querySelectorAll(".js-task-checkbox").forEach(checkbox => {
-          checkbox.addEventListener("change", function () {
-            const { taskId } = this.dataset
-            fetch(`/tasks/${taskId}`, {
-              method: "PATCH",
-              headers: {
-                "Content-Type": "application/json"
-              },
-              body: JSON.stringify({ isCompleted: this.checked })
-            })
+    <script>
+      document.querySelectorAll(".js-task-checkbox").forEach(checkbox => {
+        checkbox.addEventListener("change", function () {
+          const { taskId } = this.dataset
+
+          fetch(`/tasks/${taskId}`, {
+            method: "PATCH",
+            headers: {
+              "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ isCompleted: this.checked })
+          })
+
+          if(this.checked) {
+            this.nextElementSibling.style.color = "rgba(255, 255, 255, 0.4)"
+          } else {
+            this.nextElementSibling.style.color = "rgba(255, 255, 255, 0.8)"
+          }
+        })
+      })
+
+      document.querySelectorAll(".js-delete-task").forEach((button) => {
+        button.addEventListener("click", function() {
+          this.closest("div").remove()
+          const { taskId } = this.dataset
+          fetch(`/tasks/${taskId}`, {
+            method: "DELETE"
           })
         })
-
-        document.querySelectorAll(".js-delete-task").forEach((button) => {
-          button.addEventListener("click", function() {
-            this.closest("li").remove()
-            const { taskId } = this.dataset
-            fetch(`/tasks/${taskId}`, {
-              method: "DELETE"
-            })
-          })
-        })
-      </script>
-</body>
-
+      })
+    </script>
+  </body>
 </html>

@@ -1,0 +1,179 @@
+* {
+    margin: 0;
+    padding: 0;
+    font-family: Arial, Helvetica, sans-serif;
+    box-sizing: border-box;
+}
+
+.container {
+    width: 100%;
+    min-height: 100vh;
+    padding: 10px;
+    background-color: black;
+}
+
+.todo-form {
+    height: 100%;
+    width: 100%;
+}
+
+.todo-list {
+    width: 100%;
+    max-width: 550px;
+    /* background: #fff; */
+    margin: 100px auto 20px;
+    padding: 0 20px;
+    border-radius: 10px;
+}
+
+.todo-list h1 {
+    color: white;
+    margin: 0 0 20px 10px;
+}
+
+.row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-left: 10px;
+    /* margin-bottom: 10px; */
+}
+
+#task-todo {
+    flex: 1;
+    min-width: 120px;
+    outline: none;
+    border-width: 0px 0px 1px;
+    border-color: rgba(255, 255, 255, 0.3);
+    background-color: transparent;
+    color: white;
+    padding: 10px 0px 5px;
+    margin: 0 20px 20px 0;
+    font-size: 18px;
+    /* font-weight: 14px; */
+}
+
+#task-deadline {
+    width: 125px;
+    background-color: transparent;
+    color: rgba(255, 255, 255, 0.3);
+    outline: none;
+    border: none;
+    font-size: 18px;
+    text-align: righ;
+}
+
+input[id="task-deadline"]::-webkit-calendar-picker-indicator {
+    color: rgb(255, 255, 255);
+    opacity: 1;
+    display: block;
+    background: url(cal-icon.png) no-repeat;
+    width: 20px;
+    height: 20px;
+    border-width: thin;
+}
+
+.todo-list .description {
+    display: flex;
+}
+
+#task-description {
+    flex: 1;
+    background-color: transparent;
+    margin: 0 10px 10px;
+    padding-bottom: 5px;
+    color: white;
+    font-size: 18px;
+    outline: none;
+    border-width: 0px 0px 1px;
+    border-color: rgba(255, 255, 255, 0.3);
+    background-color: transparent;
+}
+
+.create-task {
+    margin: 20px auto 40px;
+    border: none;
+    display: block;
+    font-size: 16px;
+    width: 90%;
+    padding: 8px 20px 8px;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+.create-task:hover {
+    background-color: rgba(255, 255, 255, 0.8);
+}
+
+.create-task:active {
+    background-color: rgba(255, 255, 255, 0.6);
+}
+
+ul li {
+    list-style: none;
+    font-size: 18px;
+    user-select: none;
+    /* padding: 12px 8px 12px 50px; */
+    cursor: pointer;
+    color: rgba(255, 255, 255, 0.8);
+    /* position: relative; */
+}
+
+.task-list {
+    width: 100%;
+    max-width: 550px;
+    margin: 20px auto 20px;
+    padding: 0 20px;
+    border-radius: 10px;
+    display: flex;
+    gap: 20px;
+    align-items: center;
+}
+
+.task-list-checkbox {
+    width: 16px;
+    height: 16px;
+    cursor: pointer;
+    appearance: none; 
+    background-color: rgba(0, 0, 0, 0.8); 
+    border: 2px solid rgba(255, 255, 255, 0.8);
+    border-radius: 8px; 
+    position: relative;
+    display: inline-block;
+    outline: none;
+}
+
+.task-list-checkbox:checked {
+    background-color: #1abc9c; 
+    border-color: #16a085; 
+}
+
+.task-list-checkbox:checked::before {
+    content: '\2713'; 
+    font-size: 14px;
+    color: #fff;
+    position: absolute;
+    top: -2px;
+    left: 0;
+}
+
+.todo-data {
+    flex: 1;
+    color: rgba(255, 255, 255, 0.8);
+}
+
+.todo-text {
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 4px;
+}
+
+.todo-description {
+    font-size: 16px;
+}
+
+.fas.fa-trash {
+    align-items: center;
+    color: rgba(255, 255, 255, 0.8); 
+    font-size: 16px; 
+  }
