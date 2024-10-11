@@ -5,10 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="css/tasks.css">
     <title>Taskmate</title>
-    <link
-    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
-    rel="stylesheet"
-  />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
   </head>
 
   <body>
@@ -34,7 +31,6 @@
             <div class="todo-text"><%= task.todo %></div>
             <div class="todo-description"><%= task.description %></div>
           </div>
-          <!-- <button class="js-delete-task" data-task-id="<%= task._id %>">Delete</button> -->
           <i class="fas fa-trash js-delete-task" data-task-id="<%= task._id %>" style="cursor: pointer;"></i>
         </div>
       <% } %>
